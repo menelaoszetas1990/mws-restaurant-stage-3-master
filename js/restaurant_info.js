@@ -60,8 +60,14 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img';
 
-  image.setAttribute('srcset', `/images/${restaurant.id}-450_small.jpg 450w, /images/${restaurant.id}-600_medium.jpg 600w`);
-  image.setAttribute('sizes', '(max-width: 525px), (max-width: 600px)');
+  if (image.offsetWidth < 450) {
+    console.log('hrthe', image.offsetWidth);
+      image.setAttribute('srcset',`/images/${restaurant.id}-450_small.jpg`);
+  }
+  else {
+      image.setAttribute('srcset', `/images/${restaurant.id}-600_medium.jpg`);
+  }
+
   image.setAttribute('src', DBHelper.imageUrlForRestaurant(restaurant));
   image.setAttribute('alt', restaurant.name + 'restaurant image');
   image.setAttribute('tabindex', "0");
