@@ -152,12 +152,36 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
 createRestaurantHTML = (restaurant) => {
     const li = document.createElement('li');
 
-    const image = document.createElement('img');
-    image.className = 'restaurant-img';
-    image.setAttribute('alt', restaurant.name + 'restaurant image');
-    image.setAttribute('tabindex', "0");
-    image.src = DBHelper.imageUrlForRestaurant(restaurant);
-    li.append(image);
+    const picture = document.createElement('picture');
+
+    const source1 = document.createElement('source');
+    source1.setAttribute('media', '(max-width: 510px)');
+    source1.setAttribute('srcset', `/images/${restaurant.id}-450_small.jpg`);
+    picture.append(source1);
+
+    const source2 = document.createElement('source');
+    source2.setAttribute('media', '(max-width: 800px)');
+    source2.setAttribute('srcset', `/images/${restaurant.id}-600_medium.jpg`);
+    picture.append(source2);
+
+    const source3 = document.createElement('source');
+    source3.setAttribute('media', '(max-width: 990px)');
+    source3.setAttribute('srcset', `/images/${restaurant.id}-450_small.jpg`);
+    picture.append(source3);
+
+    const source4 = document.createElement('source');
+    source4.setAttribute('media', '(min-width: 991px)');
+    source4.setAttribute('srcset', `/images/${restaurant.id}-600_medium.jpg`);
+    picture.append(source4);
+
+    const src = document.createElement('img');
+    src.setAttribute('src', DBHelper.imageUrlForRestaurant(restaurant));
+    src.setAttribute('alt', restaurant.name + 'restaurant image');
+    src.className = 'restaurant-img';
+    picture.append(src);
+
+    picture.setAttribute('tabindex', "0");
+    li.append(picture);
 
     const div = document.createElement('div');
     div.className = 'restaurant-details';

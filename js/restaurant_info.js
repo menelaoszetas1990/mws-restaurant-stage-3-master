@@ -59,9 +59,12 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img';
+
+  image.setAttribute('srcset', `/images/${restaurant.id}-450_small.jpg 450w, /images/${restaurant.id}-600_medium.jpg 600w`);
+  image.setAttribute('sizes', '(max-width: 525px), (max-width: 600px)');
+  image.setAttribute('src', DBHelper.imageUrlForRestaurant(restaurant));
   image.setAttribute('alt', restaurant.name + 'restaurant image');
   image.setAttribute('tabindex', "0");
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.setAttribute('aria-label', 'cuisine' + restaurant.cuisine_type);
