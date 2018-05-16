@@ -61,7 +61,6 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   image.className = 'restaurant-img';
 
   if (image.offsetWidth < 450) {
-    console.log('hrthe', image.offsetWidth);
       image.setAttribute('srcset',`/images/${restaurant.id}-450_small.jpg`);
   }
   else {

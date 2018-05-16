@@ -1,6 +1,7 @@
 let staticCacheName = 'project1';
 
 self.addEventListener('install', (event) => {
+    console.log("Arxhse h eggrafh");
     event.waitUntil(
         caches.open(staticCacheName)
             .then((cache) => {
