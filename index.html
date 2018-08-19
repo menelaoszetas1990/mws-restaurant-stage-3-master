@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<head>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#3b33db">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+  <link rel="stylesheet" href="css/styles.css" media="all">
+  <title>Restaurant Reviews</title>
+</head>
+
+<body>
+
 <script>
     if (navigator.serviceWorker) {
         navigator.serviceWorker.register('./serviceWorker.js')
@@ -8,19 +19,9 @@
                 console.log('Service worker registered!')
             })
             .catch((e) => { console.log('Error registering service worker:', e) });
-    };
+    }
 </script>
 
-<head>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#3b33db">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
-  <link rel="stylesheet" href="css/styles.css">
-  <title>Restaurant Reviews</title>
-</head>
-
-<body>
 <header>
   <nav>
     <h1><a href="/">Restaurant Reviews</a></h1>
