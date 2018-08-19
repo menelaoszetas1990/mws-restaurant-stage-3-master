@@ -3,7 +3,7 @@
 
 <script>
     if (navigator.serviceWorker) {
-        navigator.serviceWorker.register('./sw/index.js')
+        navigator.serviceWorker.register('./serviceWorker.js')
             .then(() => {
                 console.log('Service worker registered!')
             })
@@ -12,6 +12,8 @@
 </script>
 
 <head>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#3b33db">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
   <link rel="stylesheet" href="css/styles.css">
@@ -31,7 +33,7 @@
   </section>
   <section id="restaurant-selection">
     <div class="filter-options">
-      <h2 tabindex="0" aria-label="Filter results for restaurants">Filter Results</h2>
+      <h2 id="filter-results-header" tabindex="0" aria-label="Filter results for restaurants">Filter Results</h2>
       <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()" aria-label="Select neighbohood" aria-live="assertive">
         <option value="all">All Neighborhoods</option>
       </select>
@@ -43,6 +45,7 @@
   </section>
 </main>
 
+<script type="application/javascript" charset="utf-8" src="js/idb.js"></script>
 <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
 <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYgnravsVutrZOYMHAB4wWimW76dnWC1w&libraries=places&callback=initMap"></script>

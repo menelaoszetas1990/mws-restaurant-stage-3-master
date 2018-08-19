@@ -15,19 +15,45 @@ class DBHelper {
      * Fetch all restaurants.
      */
     static fetchRestaurants(callback) {
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', DBHelper.DATABASE_URL);
-        xhr.onload = () => {
-            if (xhr.status === 200) { // Got a success response from server!
-                const json = JSON.parse(xhr.responseText);
-                // console.log(json);
-                callback(null, json);
-            } else { // Oops!. Got an error from server.
-                const error = (`Request failed. Returned status of ${xhr.status}`);
-                callback(error, null);
+        // let url;
+        // if (!id)
+        //     url = DBHelper.DATABASE_URL;
+        // else
+        //     url = DBHelper.DATABASE_URL + "/" + id;
+
+        var restaurants = [];
+
+        const dbPromise = idb.open('restraurants_db', 1, upgradeDb => {
+            switch (upgradeDb.oldVersion) {
+                case 0:
+                    var keyValStore = upgradeDb.createObjectStore('restraurants', {keyPath: 'id'});
+
             }
-        };
-        xhr.send();
+        });
+
+        dbPromise.then(db => {
+            var tx_read = db.transaction('restraurants');
+            var restraurantsObjStore = tx_read.objectStore('restraurants');
+            return restraurantsObjStore.getAll() || restaurants;
+        }).then(async function(allRestaurants){
+            if (!allRestaurants || allRestaurants.length === 0) {
+                var response = await fetch(DBHelper.DATABASE_URL);
+                allRestaurants = await response.json();
+
+                dbPromise.then(db => {
+                    var tx_write=db.transaction('restraurants', 'readwrite');
+                    var restraurantsObjStore = tx_write.objectStore('restraurants');
+                    allRestaurants.forEach(restaurant => restraurantsObjStore.put(restaurant));
+                });
+            }
+            return allRestaurants;
+        }).then(function(response){
+            return response;
+        }).then(restaurants => {
+            callback(null, restaurants);
+        }).catch(e => {
+            callback(e, null);
+        })
     }
 
     /**
@@ -90,7 +116,7 @@ class DBHelper {
             if (error) {
                 callback(error, null);
             } else {
-                let results = restaurants
+                let results = restaurants;
                 if (cuisine !== 'all') { // filter by cuisine
                     results = results.filter(r => r.cuisine_type === cuisine);
                 }
@@ -168,3 +194,5 @@ class DBHelper {
     }
 
 }
+
+window.DBHelper = DBHelper;
