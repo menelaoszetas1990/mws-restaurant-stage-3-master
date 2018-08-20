@@ -2,6 +2,15 @@
 <html lang="en">
 
 <head>
+  <script>
+      if (navigator.serviceWorker) {
+          navigator.serviceWorker.register('./serviceWorker.js')
+              .then(() => {
+                  console.log('Service worker registered!')
+              })
+              .catch((e) => { console.log('Error registering service worker:', e) });
+      }
+  </script>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#3b33db">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,17 +20,6 @@
 </head>
 
 <body>
-
-<script>
-    if (navigator.serviceWorker) {
-        navigator.serviceWorker.register('./serviceWorker.js')
-            .then(() => {
-                console.log('Service worker registered!')
-            })
-            .catch((e) => { console.log('Error registering service worker:', e) });
-    }
-</script>
-
 <header>
   <nav>
     <h1><a href="/">Restaurant Reviews</a></h1>

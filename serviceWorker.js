@@ -11,6 +11,7 @@ self.addEventListener('install', (event) => {
                     '/',
                     '/index.html',
                     '/restaurant.html',
+                    '/manifest.json',
                     '/css/styles.css',
                     '/images/1-450_small.jpg', '/images/1-600_medium.jpg', '/images/1-800_large.jpg',
                     '/images/2-450_small.jpg', '/images/2-600_medium.jpg', '/images/2-800_large.jpg',
