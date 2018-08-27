@@ -1,4 +1,5 @@
 let restaurant;
+let restaurantId;
 var map;
 
 /**
@@ -33,6 +34,7 @@ fetchRestaurantFromURL = (callback) => {
     error = 'No restaurant id in URL'
     callback(error, null);
   } else {
+    restaurantId = id;
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
       if (!restaurant) {
@@ -179,4 +181,39 @@ getParameterByName = (name, url) => {
   if (!results[2])
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+// post review
+function postReview() {
+    event.preventDefault();
+    let reviewData = getFormData();
+
+    console.log('reviews: ', reviewData);
+
+    // DBHelper.addReviews(reviewData);
+    // createReviewHTML(reviewData);
+    document.forms["reviewForm"].reset();
+}
+
+function getFormData(){
+    const name = document.getElementById("name").value;
+    const stars = document.getElementsByName("star");
+    const comments = document.getElementById("comments").value;
+
+    let rating = 0;
+    for (let i = 0; i < 5; i++) {
+        if (stars[i].checked) {
+            rating = parseInt(stars[i].value);
+        }
+    }
+
+    const review = {
+        restaurant_id: parseInt(restaurantId),
+        name: name,
+        rating: rating,
+        comments: comments,
+        creationDate: new Date()
+    };
+
+    return review;
 }

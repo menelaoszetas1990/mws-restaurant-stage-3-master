@@ -49,6 +49,46 @@
     <section id="reviews-container">
       <ul id="reviews-list"></ul>
     </section>
+
+    <!-- Add a review -->
+    <section id="review" class="box">
+      <form role="form" action="#" method="post" id ="reviewForm" style=" width: 100%;padding: 0.8em;
+  margin-left: 0;
+  margin-right: 0;
+  height: auto;">
+          <h3>Write a review</h3>
+          <div>
+            <label for="name" >Your name: <span class="required" style="color: red;">*</span>
+            </label>
+            <input type="text" name="name" placeholder="Your name" size="30" maxlength="100" required="required" class = "title" id= "name" >
+          </div>
+          <div id="stars" aria-label="Rating">
+            <label>Rating: <span class="required" style="color: red;">*</span>
+            </label>
+            <div class="ratingStars">
+              <input type="radio" id="stars-5" name="star" value="5"/>
+              <label title="5 stars" for="stars-5"></label>
+              <input type="radio" id="stars-4" name="star" value="4"/>
+              <label title="4 stars" for="stars-4"></label>
+              <input type="radio" id="stars-3" name="star" value="3">
+              <label title="3 stars" for="stars-3"></label>
+              <input type="radio" id="stars-2" name="star" value="2"/>
+              <label title="2 stars" for="stars-2"></label>
+              <input type="radio" id="stars-1" name="star" value="1"/>
+              <label title="1 stars" for="stars-1"></label>
+            </div>
+          </div>
+          <div>
+            <div>
+              <label for="comments">Comments:
+                <span class="required" style="color: red;">*</span>
+              </label>
+            </div>
+            <textarea rows="6" name="comments" id="comments" placeholder="Write your review"></textarea>
+          </div>
+          <button class="Submit-button" onclick="postReview()">Submit Review</button>
+      </form>
+    </section>
     <!-- End reviews -->
   </div>
 </main>

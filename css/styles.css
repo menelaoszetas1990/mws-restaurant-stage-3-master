@@ -509,3 +509,160 @@ nav h1 a {
 #restaurant-hours td {
   color: #666;
 }
+
+/* review form */
+#review h3 {
+  color: #f58500;
+  font-size: 24pt;
+  font-weight: 300;
+  letter-spacing: -1px;
+  padding-bottom: 1pt;
+}
+
+.ratingStars {
+  display: inline-flex;
+  direction: rtl;
+  text-align: center;
+  width: 100px;
+  border: 0;
+}
+
+button {
+  border-color: black;
+  height: 50px;
+  width: 100%;
+  padding: 5px 10px;
+  background: black;
+  text-align: center;
+  color: white;
+  font-size: 16px;
+}
+
+#comments {
+  border: 1px solid black;
+  width: 90%;
+  min-width: 90%;
+  padding: 5px 10px;
+  max-height: 450px;
+}
+
+label,
+input,
+textarea {
+  font: 1em sans-serif;
+}
+textarea {
+  width: 90%;
+}
+
+input {
+  max-width: 200px;
+  height: auto;
+  margin: .5rem 0;
+  border-radius: 5px;
+  padding: 5px;
+  color: black;
+  background-color: white;
+  border: 1px solid black;
+}
+
+label {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+input:focus {
+  background-color: white;
+  border: 1px solid #f58500;
+}
+
+.title {
+  margin-left: 10px;
+}
+
+form{
+  margin: 0;
+}
+
+fieldset {
+  padding: 0.75em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 5px auto;
+  height: 90%;
+  width: 90%;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
+input[type= "radio"] {
+  display: none;
+}
+
+#stars  {
+  display: flex;
+  border: 0;
+}
+
+#stars > .ratingStars  label {
+  line-height: 2rem;
+  position: relative;
+  text-align: center;
+  width: 1em;
+  height: 2em;
+}
+
+.ratingStars label:before {
+  content: "☆";
+  position: absolute;
+  margin: 0;
+  text-indent: 0;
+  line-height: 1em;
+  color: #aaa;
+}
+
+.ratingStars label:hover:before,
+.ratingStars label:hover~label:before,
+.ratingStars input:checked~label:before {
+  content: "★";
+  color: #ffbb04;
+}
+
+.ratingStars label:active {
+  color: #ccc;
+  top: 1px;
+}
+
+.submit {
+  width: 92%;
+  margin: 0 auto;
+}
+
+input[type ="button"] {
+  height: 30px;
+  width:50px;
+  background-color: #eee;
+  padding: 5px;
+  border: 2px solid #b2b2b2;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 16px;
+  text-shadow: 0px 1px 1px #ffffff;
+}
+
+#favorite {
+  margin: 0;
+  width: 10%;
+  height: 16px;
+}
+label.is_favorite:hover{
+  color: #ffbb04;
+}
+
+
+
+input[type="radio"]:checked + label {
+  color:#ffbb04;
+}
+
