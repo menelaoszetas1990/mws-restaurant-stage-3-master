@@ -181,11 +181,11 @@ createRestaurantHTML = (restaurant) => {
     favorite.innerHTML = "❤";
     favorite.setAttribute('aria-label', 'set favorite');
     if (restaurant.is_favorite === "true") {
-        favorite.setAttribute('style','background: red !important');
+        favorite.setAttribute('style','background: red !important; color: black !important;');
         favorite.setAttribute('aria-label', 'remove favorite');
     }
     else {
-        favorite.setAttribute('style','background: black !important');
+        favorite.setAttribute('style','background: black !important; color: white !important;');
         favorite.setAttribute('aria-label', 'set favorite');
     }
     favorite.addEventListener('click', () => {
@@ -193,11 +193,11 @@ createRestaurantHTML = (restaurant) => {
         DBHelper.isFavoriteRestaurant(restaurant.id, isFavorite);
         restaurant.is_favorite = isFavorite;
         if (isFavorite) {
-            favorite.setAttribute('style','background: red !important');
+            favorite.setAttribute('style','background: red !important; color: black !important;');
             favorite.setAttribute('aria-label', 'remove favorite');
         }
         else {
-            favorite.setAttribute('style','background:black !important');
+            favorite.setAttribute('style','background: black !important; color: white !important;');
             favorite.setAttribute('aria-label', 'set favorite');
         }
     });
