@@ -181,14 +181,16 @@
 
     #restaurants-list li h2,
     #restaurants-list li p,
-    #restaurants-list li a {
+    #restaurants-list li a,
+    #restaurants-list li button {
         width: auto;
         overflow: hidden;
         margin-right: 0;
         text-align: right;
     }
 
-    #restaurants-list li a {
+    #restaurants-list li a,
+    #restaurants-list li button {
         max-width: 50%;
         margin-left: auto !important;
     }
@@ -407,9 +409,9 @@ nav h1 a {
     font-size: 11pt;
 }
 
+#restaurants-list li button,
 #restaurants-list li a {
     background-color: black;
-    border-bottom: 3px solid #eee;
     color: #fff;
     display: inline-block;
     font-size: 10pt;
@@ -418,6 +420,12 @@ nav h1 a {
     text-align: center;
     text-decoration: none;
     text-transform: uppercase;
+}
+
+#restaurants-list li button {
+    max-width: 100px;
+    margin-bottom: 15px !important;
+    margin-top: 10px !important;
 }
 
 /* ====================== Restaurant Details ====================== */

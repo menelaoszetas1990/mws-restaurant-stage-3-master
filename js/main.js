@@ -126,6 +126,7 @@ resetRestaurants = (restaurants) => {
  */
 fillRestaurantsHTML = (restaurants = self.restaurants) => {
     const ul = document.getElementById('restaurants-list');
+    console.log(restaurants);
     restaurants.forEach(restaurant => {
         ul.append(createRestaurantHTML(restaurant));
     });
@@ -175,6 +176,32 @@ createRestaurantHTML = (restaurant) => {
     const name = document.createElement('h2');
     name.innerHTML = restaurant.name;
     div.append(name);
+
+    const favorite = document.createElement('button');
+    favorite.innerHTML = "❤";
+    favorite.setAttribute('aria-label', 'set favorite');
+    if (restaurant.is_favorite === "true") {
+        favorite.setAttribute('style','background: red !important');
+        favorite.setAttribute('aria-label', 'remove favorite');
+    }
+    else {
+        favorite.setAttribute('style','background: black !important');
+        favorite.setAttribute('aria-label', 'set favorite');
+    }
+    favorite.addEventListener('click', () => {
+        const isFavorite = !restaurant.is_favorite;
+        DBHelper.isFavoriteRestaurant(restaurant.id, isFavorite);
+        restaurant.is_favorite = isFavorite;
+        if (isFavorite) {
+            favorite.setAttribute('style','background: red !important');
+            favorite.setAttribute('aria-label', 'remove favorite');
+        }
+        else {
+            favorite.setAttribute('style','background:black !important');
+            favorite.setAttribute('aria-label', 'set favorite');
+        }
+    });
+    div.append(favorite);
 
     const neighborhood = document.createElement('p');
     neighborhood.className = 'restaurant-details';

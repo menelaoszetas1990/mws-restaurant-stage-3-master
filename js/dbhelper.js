@@ -293,6 +293,30 @@ class DBHelper {
                     });
             });
     }
+
+    static isFavoriteRestaurant(id, isFavorite) {
+
+        const isFavoriteData = {
+            is_favorite: isFavorite
+        };
+
+        const headers = new Headers({'Content-Type': 'application/json'});
+        const body = JSON.stringify(isFavoriteData);
+        let options = {
+            method: 'POST',
+            mode: 'cors',
+            cache: "no-cache",
+            credentials: 'same-origin',
+            headers: headers,
+            body: body
+
+        };
+        this.serverConnection(`http://localhost:1337/restaurants/${id}/?is_favorite=${isFavorite}`, options)
+            .then(() => {
+
+            })
+            .catch(error => console.log('Error', error.message));
+    }
 }
 
 window.DBHelper = DBHelper;
