@@ -466,7 +466,7 @@ nav h1 a {
 }
 
 #inside-left-column {
-    display: flex;
+    display: table;
     flex-direction: column;
     flex-wrap: wrap;
     width: 50%;
