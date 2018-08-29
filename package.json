@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "udacity 2nd app",
   "main": "Gruntfile.js",
-  "dependencies": {},
+  "dependencies": {
+    "dateformat": "^3.0.3"
+  },
   "devDependencies": {
     "babel-eslint": "^8.0.2",
     "babelify": "^6.2.0",

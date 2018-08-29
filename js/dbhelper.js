@@ -11,6 +11,22 @@ class DBHelper {
         return `http://localhost:1337/restaurants`;
     }
 
+    static createIndexDB() {
+        if (!navigator.serviceWorker) {
+            return Promise.resolve();
+        }
+
+        return idb.open('restaurants_db', 2, (upgradeDb) =>  {
+            switch(upgradeDb.oldVersion) {
+                case 0:
+                    const restaurantsStore = upgradeDb.createObjectStore('restaurants', {keyPath: 'id'});
+                case 1:
+                    // const reviewsStore = upgradeDb.createObjectStore('reviews', {keyPath: 'restaurant_id'});
+                    const reviewsStore = upgradeDb.createObjectStore('reviews', {keyPath: 'id'});
+            }
+        });
+    }
+
     /**
      * Fetch all restaurants.
      */
@@ -23,27 +39,21 @@ class DBHelper {
 
         var restaurants = [];
 
-        const dbPromise = idb.open('restraurants_db', 1, upgradeDb => {
-            switch (upgradeDb.oldVersion) {
-                case 0:
-                    var keyValStore = upgradeDb.createObjectStore('restraurants', {keyPath: 'id'});
-
-            }
-        });
+        let dbPromise = this.createIndexDB();
 
         dbPromise.then(db => {
-            var tx_read = db.transaction('restraurants');
-            var restraurantsObjStore = tx_read.objectStore('restraurants');
-            return restraurantsObjStore.getAll() || restaurants;
+            let tx_read = db.transaction('restaurants');
+            let restaurantsObjStore = tx_read.objectStore('restaurants');
+            return restaurantsObjStore.getAll() || restaurants;
         }).then(async function(allRestaurants){
             if (!allRestaurants || allRestaurants.length === 0) {
-                var response = await fetch(DBHelper.DATABASE_URL);
+                let response = await fetch(DBHelper.DATABASE_URL);
                 allRestaurants = await response.json();
 
                 dbPromise.then(db => {
-                    var tx_write=db.transaction('restraurants', 'readwrite');
-                    var restraurantsObjStore = tx_write.objectStore('restraurants');
-                    allRestaurants.forEach(restaurant => restraurantsObjStore.put(restaurant));
+                    let tx_write = db.transaction('restaurants', 'readwrite');
+                    let restaurantsObjStore = tx_write.objectStore('restaurants');
+                    allRestaurants.forEach(restaurant => restaurantsObjStore.put(restaurant));
                 });
             }
             return allRestaurants;
@@ -67,6 +77,7 @@ class DBHelper {
             } else {
                 const restaurant = restaurants.find(r => r.id.toString() === id);
                 if (restaurant) { // Got the restaurant
+                    console.log(restaurant);
                     callback(null, restaurant);
                 } else { // Restaurant does not exist in the database
                     callback('Restaurant does not exist', null);
@@ -193,6 +204,95 @@ class DBHelper {
         return marker;
     }
 
+    static addReview(review){
+        const headers = new Headers({'Content-Type': 'application/json'});
+        const body = JSON.stringify(review);
+        let options = {
+            method: 'POST',
+            mode: 'cors',
+            cache: "no-cache",
+            credentials: 'same-origin',
+            headers: headers,
+            body: body
+        };
+        this.serverConnection('http://localhost:1337/reviews/', options)
+            .then((data) => {
+                this.fetchReviewsById(data.restaurant_id);
+            })
+            .catch(error => {
+                console.log('Fail to add review: ', error.message);
+            });
+    }
+
+    static setOfflineReview(review) {
+        localStorage.setItem('offlineReview', review);
+    }
+
+    static sendOfflineData() {
+        const  offlineReview = JSON.parse(localStorage.getItem('offlineReview'));
+
+        if (localStorage.length) {
+            this.addReview(offlineReview);
+            localStorage.clear();
+        }
+    }
+
+    static serverConnection(url,options) {
+        return fetch(url, options).then(response => {
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            return response.json();
+        });
+    }
+
+    static fetchReviewsById(id, callback){
+        const options = {
+            credentials: 'include'
+        };
+        const url = `http://localhost:1337/reviews/?restaurant_id=${id}`;
+        let dbPromise = this.createIndexDB();
+
+        this.serverConnection(url, options)
+            .then(reviews => {
+                dbPromise.then((db) => {
+                        if (!db) return;
+
+                        let tx = db.transaction('reviews', 'readwrite');
+                        let reviewsObjStore = tx.objectStore('reviews');
+
+                        if (Array.isArray(reviews)){
+                            console.log('reviews', reviews);
+                            reviews.forEach(review => {
+                                reviewsObjStore.put(review);
+                            });
+                        }else {
+                            reviewsObjStore.put(reviews);
+                        }
+
+                        callback(reviews);
+                    });
+            })
+            .catch((error) => {
+                    return dbPromise.then((db) => {
+                        if (!db) return;
+
+                        let tx = db.transaction('reviews', 'readonly');
+                        let reviewsObjStore = tx.objectStore('reviews');
+
+                        return Promise.resolve(reviewsObjStore.getAll())
+                            .then((reviews) => {
+                                let restaurantReviews = [];
+                                reviews.forEach(review => {
+                                    if (review.restaurant_id.toString() === id) {
+                                        restaurantReviews.push(review);
+                                    }
+                                });
+                                callback(restaurantReviews);
+                            })
+                    });
+            });
+    }
 }
 
 window.DBHelper = DBHelper;

@@ -29,55 +29,69 @@ self.addEventListener('install', (event) => {
                     '/js/idb.js'
                 ])
             })
-    )
+            .then(self.skipWaiting())
+    );
+});
+
+self.addEventListener("activate", event => {
+    event.waitUntil(
+        caches.keys()
+            .then(cacheNames => Promise.all(
+                cacheNames.map(cache => {
+                    if (cache !== staticCacheName) {
+                        return caches.delete(cache);
+                    }
+                })
+            ))
+    );
 });
 
 self.addEventListener('fetch', (event) => {
-    event.respondWith(
-        caches.match(event.request)
-            .then(function (response) {
+    if (event.request.url.startsWith(self.location.origin)) {
+        event.respondWith(
+            caches.match(event.request)
+                .then(response => {
 
-                var fromNetwork = fetch(event.request).then(fetchFromNetwork, fetchFailed).catch(fetchFailed);
+                    let fromNetwork = fetch(event.request)
+                        .then(fetchFromNetwork, fetchFailed)
+                        .catch(fetchFailed);
 
-                return response || fromNetwork;
+                    return response || fromNetwork;
 
-                function fetchFromNetwork(response) {
-                    var responseClone = response.clone();
+                    function fetchFromNetwork(response) {
+                        let responseClone = response.clone();
 
-                    caches.open(staticCacheName).then(function add(cache) {
+                        caches.open(staticCacheName).then(function add(cache) {
 
-                        cache.put(event.request, responseClone);
+                            cache.put(event.request, responseClone);
 
-                        event.request.json().then(responseJson => {
+                            event.request.json().then(responseJson => {
 
-                            dbPromise.then(function (db) {
-                                let tx_write = db.transaction('restraurants', 'readwrite');
-                                let restaurantsStore = tx_write.objectStore('restraurants');
+                                dbPromise.then(function (db) {
+                                    let tx_write = db.transaction('restraurants', 'readwrite');
+                                    let restaurantsStore = tx_write.objectStore('restraurants');
 
-                                for (let i = 0; i < responseJson.length; i++) {
-                                    restaurantsStore.put(responseJson[i]);
-                                }
+                                    for (let i = 0; i < responseJson.length; i++) {
+                                        restaurantsStore.put(responseJson[i]);
+                                    }
+                                })
+                            }).catch(responseJson => {
+                                console.log("db fail for: " + responseJson);
                             })
-                        }).then(responseJson => {
-                            console.log("db success for: " + responseJson);
-                        }).catch(responseJson => {
-                            console.log("db fail for: " + responseJson);
-                        })
-                    }).then(function () {
-                        console.log('Response cached.', event.request.url);
-                    });
-                }
+                        });
+                    }
 
-                function fetchFailed() {
-                    console.log('Fetch failed.');
+                    function fetchFailed() {
+                        console.log('Fetch failed.');
 
-                    return new Response('<h1>No Response</h1>', {
-                        status: 404,
-                        statusText: 'Resource Not Found',
-                        headers: new Headers({'Content-Type': 'text/html'})
-                    });
-                }
+                        return new Response('<h1>No Response</h1>', {
+                            status: 404,
+                            statusText: 'Resource Not Found',
+                            headers: new Headers({'Content-Type': 'text/html'})
+                        });
+                    }
 
-            })
-    )
+                })
+        )
+    }
 });
