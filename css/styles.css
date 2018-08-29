@@ -515,6 +515,11 @@ nav h1 a {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+    height: 100%
+}
+
+#restaurant-container {
+    display: table !important;
 }
 
 #reviews-container h3 {
